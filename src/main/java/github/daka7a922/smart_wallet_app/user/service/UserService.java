@@ -76,4 +76,10 @@ public class UserService {
                 .build();
     }
 
+    public List<User> getAllUsers() {
+
+        List<User> users = userRepository.findAll();
+
+        return users;
+    }
 }

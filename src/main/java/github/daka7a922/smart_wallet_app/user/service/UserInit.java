@@ -11,6 +11,7 @@ public class UserInit implements CommandLineRunner {
 
     private final UserService userService;
 
+
     @Autowired
     public UserInit(UserService userService) {
         this.userService = userService;
@@ -18,6 +19,10 @@ public class UserInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        if (userService.getAllUsers().isEmpty()){
+            return;
+        }
 
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .username("Dani123")
