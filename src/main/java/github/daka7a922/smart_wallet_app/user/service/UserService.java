@@ -11,6 +11,7 @@ import github.daka7a922.smart_wallet_app.wallet.service.WalletService;
 import github.daka7a922.smart_wallet_app.web.dto.RegisterRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,10 +77,9 @@ public class UserService {
                 .build();
     }
 
+    @Cacheable("users")
     public List<User> getAllUsers() {
 
-        List<User> users = userRepository.findAll();
-
-        return users;
+        return userRepository.findAll();
     }
 }

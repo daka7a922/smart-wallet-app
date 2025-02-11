@@ -20,7 +20,8 @@ public class UserInit implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        if (userService.getAllUsers().isEmpty()){
+
+        if (!userService.getAllUsers().isEmpty()) {
             return;
         }
 
