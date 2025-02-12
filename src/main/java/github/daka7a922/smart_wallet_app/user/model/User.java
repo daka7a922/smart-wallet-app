@@ -52,8 +52,10 @@ public class User {
     private LocalDateTime updatedOn;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @OrderBy("createdOn DESC")
     private List<Subscription> subscriptions = new ArrayList<>();
 
+    @OrderBy("createdOn ASC")
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Wallet> wallets = new ArrayList<>();;
 
