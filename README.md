@@ -1,1 +1,1 @@
-Smart wallet application
+Smart wallet application developed Spring Boot
