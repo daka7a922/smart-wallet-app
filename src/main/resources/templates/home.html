@@ -103,7 +103,7 @@
         <h2 class="profile-name" th:text = "${user.getUsername()}"></h2>
         <div class="profile-status-role-container">
           <p class="active-profile" th:if="${user.active}">ACTIVE</p>
-          <p class="active-profile" th:if="${!user.active}">INACTIVE</p>
+          <p class="inactive-profile" th:if="${!user.active}">INACTIVE</p>
         </div>
         <div class="details-section">
           <div class="details-section-container">
