@@ -1,5 +1,6 @@
 package github.daka7a922.smart_wallet_app.transaction.service;
 
+import github.daka7a922.smart_wallet_app.exception.DomainException;
 import github.daka7a922.smart_wallet_app.transaction.model.Transaction;
 import github.daka7a922.smart_wallet_app.transaction.model.TransactionStatus;
 import github.daka7a922.smart_wallet_app.transaction.model.TransactionType;
@@ -30,9 +31,14 @@ public class TransactionService {
         return transactionRepository.findAllByOwnerIdOrderByCreatedOnDesc(ownerId);
     }
 
+    public Transaction getById(UUID id){
+
+        return transactionRepository.findById(id).orElseThrow(()-> new DomainException("Transaction with id [%s] does not exist.".formatted(id)));
+    }
+
     public Transaction createTransaction    (User owner, String sender, String receiver, BigDecimal amount, BigDecimal balanceLeft, Currency currency, TransactionType type, TransactionStatus status, String description, String failureReason){
 
-        return Transaction.builder()
+       Transaction transaction = Transaction.builder()
                 .owner(owner)
                 .sender(sender)
                 .receiver(receiver)
@@ -45,5 +51,6 @@ public class TransactionService {
                 .failureReason(failureReason)
                 .createdOn(LocalDateTime.now())
                 .build();
+        return transactionRepository.save(transaction);
     }
 }

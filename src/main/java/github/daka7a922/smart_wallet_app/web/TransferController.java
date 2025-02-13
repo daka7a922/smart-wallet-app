@@ -1,7 +1,9 @@
 package github.daka7a922.smart_wallet_app.web;
 
+import github.daka7a922.smart_wallet_app.transaction.model.Transaction;
 import github.daka7a922.smart_wallet_app.user.model.User;
 import github.daka7a922.smart_wallet_app.user.service.UserService;
+import github.daka7a922.smart_wallet_app.wallet.service.WalletService;
 import github.daka7a922.smart_wallet_app.web.dto.TransferRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,12 @@ import java.util.UUID;
 public class TransferController {
 
     private final UserService userService;
+    private final WalletService walletService;
 
     @Autowired
-    public TransferController(UserService userService) {
+    public TransferController(UserService userService, WalletService walletService) {
         this.userService = userService;
+        this.walletService = walletService;
     }
 
     @GetMapping
@@ -41,11 +45,20 @@ public class TransferController {
     @PostMapping
     public ModelAndView initiateTransfer(@Valid TransferRequest transferRequest, BindingResult bindingResult){
 
+        User user = userService.getUserById(UUID.fromString("4f35f873-f28c-466a-8cd4-5e52482b1b8f"));
+
+        if (bindingResult.hasErrors()){
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("transfer");
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("transferRequest", transferRequest);
 
 
-        ModelAndView modelAndView = new ModelAndView();
+            return modelAndView;
+        }
 
+        Transaction transaction = walletService.transferFunds(user, transferRequest);
 
-        return null;
+        return new ModelAndView("redirect:/transactions/" + transaction.getId());
     }
 }

@@ -9,6 +9,8 @@ import github.daka7a922.smart_wallet_app.user.model.User;
 import github.daka7a922.smart_wallet_app.wallet.model.Wallet;
 import github.daka7a922.smart_wallet_app.wallet.model.WalletStatus;
 import github.daka7a922.smart_wallet_app.wallet.repository.WalletRepository;
+import github.daka7a922.smart_wallet_app.web.dto.TransferRequest;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,7 @@ public class WalletService {
         this.transactionService = transactionService;
     }
 
-    public Wallet createNewWallet(User user){
+    public Wallet createNewWallet(User user) {
 
         Wallet wallet = walletRepository.save(initializeWallet(user));
         log.info("Successfully create new wallet with id [%s] and balance [%.2f].".formatted(wallet.getId(), wallet.getBalance()));
@@ -45,23 +47,79 @@ public class WalletService {
     }
 
     @Transactional
-    public Transaction charge (User user, UUID walletId, BigDecimal amount, String description){
+    public Transaction transferFunds(User sender, TransferRequest transferRequest) {
+
+        Wallet senderWallet = getWalletById(transferRequest.getFromWalletId());
+
+        Optional<Wallet> optionalReceiverWallet = walletRepository.findAllByOwnerUsername(transferRequest.getToUsername())
+                .stream()
+                .filter(w -> w.getStatus() == WalletStatus.ACTIVE)
+                .findFirst();
+
+        String transferDescription = "Transfer from %s to %s for %.2f".formatted(sender.getUsername(), transferRequest.getToUsername(), transferRequest.getAmount());
+
+        if (optionalReceiverWallet.isEmpty()) {
+
+            return transactionService.createTransaction(
+                    sender,
+                    senderWallet.getId().toString(),
+                    transferRequest.getToUsername(),
+                    transferRequest.getAmount(),
+                    senderWallet.getBalance(),
+                    senderWallet.getCurrency(),
+                    TransactionType.WITHDRAW,
+                    TransactionStatus.FAILED,
+                    transferDescription,
+                    "Invalid transfer criteria"
+            );
+        }
+
+
+        Transaction withdraw = charge(sender, senderWallet.getId(), transferRequest.getAmount(), transferDescription);
+
+        if (withdraw.getStatus() == TransactionStatus.FAILED) {
+            return withdraw;
+        }
+        Wallet receiverWallet = optionalReceiverWallet.get();
+
+        receiverWallet.setBalance(receiverWallet.getBalance().add(transferRequest.getAmount()));
+        receiverWallet.setUpdatedOn(LocalDateTime.now());
+
+        walletRepository.save(receiverWallet);
+
+        transactionService.createTransaction(receiverWallet.getOwner(),
+                senderWallet.getId().toString(),
+                receiverWallet.getId().toString(),
+                transferRequest.getAmount(),
+                receiverWallet.getBalance(),
+                receiverWallet.getCurrency(),
+                TransactionType.DEPOSIT,
+                TransactionStatus.SUCCEEDED,
+                transferDescription,
+                "null"
+                );
+
+        return withdraw;
+    }
+
+    @Transactional
+    public Transaction charge(User user, UUID walletId, BigDecimal amount, String description) {
 
         Wallet wallet = getWalletById(walletId);
 
         String failureReason = null;
         boolean isFailedTransaction = false;
 
-        if (wallet.getStatus() == WalletStatus.INACTIVE){
-             failureReason = "Inactive wallet";
-             isFailedTransaction = true;
+        if (wallet.getStatus() == WalletStatus.INACTIVE) {
+            failureReason = "Inactive wallet";
+            isFailedTransaction = true;
         }
-        if (wallet.getBalance().compareTo(amount) < 0 ){
+        if (wallet.getBalance().compareTo(amount) < 0) {
             failureReason = "Insufficient funds2";
             isFailedTransaction = true;
         }
 
-        if (isFailedTransaction){
+        if (isFailedTransaction) {
 
             return transactionService.createTransaction(
                     user,
@@ -97,9 +155,9 @@ public class WalletService {
         );
     }
 
-    public Wallet getWalletById(UUID walletId){
+    public Wallet getWalletById(UUID walletId) {
 
-        return walletRepository.findById(walletId).orElseThrow(()-> new DomainException("Wallet with id [%s] does not exist".formatted(walletId)));
+        return walletRepository.findById(walletId).orElseThrow(() -> new DomainException("Wallet with id [%s] does not exist".formatted(walletId)));
 
     }
 
