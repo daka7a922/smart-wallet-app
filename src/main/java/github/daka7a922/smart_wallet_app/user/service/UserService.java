@@ -8,6 +8,7 @@ import github.daka7a922.smart_wallet_app.user.model.UserRole;
 import github.daka7a922.smart_wallet_app.user.repository.UserRepository;
 import github.daka7a922.smart_wallet_app.wallet.model.Wallet;
 import github.daka7a922.smart_wallet_app.wallet.service.WalletService;
+import github.daka7a922.smart_wallet_app.web.dto.LoginRequest;
 import github.daka7a922.smart_wallet_app.web.dto.RegisterRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,5 +88,22 @@ public class UserService {
     public User getUserById(UUID id) {
 
         return userRepository.findById(id).orElseThrow(() -> new DomainException("User with id [%s] does not exist".formatted(id)));
+    }
+
+    public User login(LoginRequest loginRequest) {
+
+        Optional<User> optionalUser = userRepository.findByUsername(loginRequest.getUsername());
+
+        if (optionalUser.isEmpty()){
+            throw new DomainException("Username or password are incorrect");
+        }
+
+        User user = optionalUser.get();
+
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+            throw new DomainException("Username or password are incorrect");
+        }
+
+        return user;
     }
 }
