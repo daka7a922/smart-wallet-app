@@ -10,6 +10,7 @@ import github.daka7a922.smart_wallet_app.wallet.model.Wallet;
 import github.daka7a922.smart_wallet_app.wallet.service.WalletService;
 import github.daka7a922.smart_wallet_app.web.dto.LoginRequest;
 import github.daka7a922.smart_wallet_app.web.dto.RegisterRequest;
+import github.daka7a922.smart_wallet_app.web.dto.UserEditRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -64,20 +65,7 @@ public class UserService {
         return user;
     }
 
-    private User initializeUser(RegisterRequest registerRequest) {
 
-        LocalDateTime now = LocalDateTime.now();
-
-        return User.builder()
-                .username(registerRequest.getUsername())
-                .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .country(registerRequest.getCountry())
-                .isActive(true)
-                .userRole(UserRole.USER)
-                .createdOn(now)
-                .updatedOn(now)
-                .build();
-    }
 
     @Cacheable("users")
     public List<User> getAllUsers() {
@@ -105,5 +93,35 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public void updateUserProfile(UUID id, UserEditRequest userEditRequest){
+
+        User user = getUserById(id);
+
+        user.setFirstName(userEditRequest.getFirstName());
+        user.setLastName(userEditRequest.getLastName());
+        user.setEmail(userEditRequest.getEmail());
+        user.setProfilePicture(userEditRequest.getProfilePicture());
+
+        userRepository.save(user);
+
+        log.info("Successfully update user profile for user with id [%s]".formatted(user.getId()));
+
+    }
+
+    private User initializeUser(RegisterRequest registerRequest) {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        return User.builder()
+                .username(registerRequest.getUsername())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .country(registerRequest.getCountry())
+                .isActive(true)
+                .userRole(UserRole.USER)
+                .createdOn(now)
+                .updatedOn(now)
+                .build();
     }
 }

@@ -25,7 +25,7 @@ public class TransactionController {
     public ModelAndView getTransactionsPage(){
 
 
-        List<Transaction> transactions = transactionService.getAllTransactionsByOwnerId(UUID.fromString("bb205399-4060-4017-a639-b142e715f742"));
+        List<Transaction> transactions = transactionService.getAllTransactionsByOwnerId(UUID.fromString("4f35f873-f28c-466a-8cd4-5e52482b1b8f"));
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("transactions");
         modelAndView.addObject("transactions", transactions);
