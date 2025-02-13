@@ -112,11 +112,11 @@
         <div class="payment-details">
           <div class="details">
             <span class="item">Product:</span>
-            <span class="value">2.00 EUR from ivan123</span>
+            <span class="value" th:text="${transaction.description}"></span>
           </div>
           <div class="details">
             <span class="item">Amount:</span>
-            <span class="value">2.04 EUR</span>
+            <span class="value" th:text="${transaction.amount + ' EUR'}"></span>
           </div>
         </div>
       </div>
@@ -136,11 +136,11 @@
         <div class="payment-details">
           <div class="details">
             <span class="item">Product:</span>
-            <span class="value">1.03 EUR from Vik</span>
+            <span class="value" th:text="${transaction.description}"></span>
           </div>
           <div class="details">
             <span class="item">Reason:</span>
-            <span class="value">Unable to perform transfer due to criteria not met</span>
+            <span class="value" th:text="${transaction.failureReason}"></span>
           </div>
         </div>
       </div>
@@ -148,7 +148,7 @@
       <div class="details-section">
         <div class="details-section-container">
           <strong>Transaction id: </strong>
-          <p>0642dd9b-bd24-48c6-b874-87d02be410ec</p>
+          <p th:text="${transaction.id}"></p>
         </div>
       </div>
 

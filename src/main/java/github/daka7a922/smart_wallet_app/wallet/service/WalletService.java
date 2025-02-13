@@ -115,7 +115,7 @@ public class WalletService {
             isFailedTransaction = true;
         }
         if (wallet.getBalance().compareTo(amount) < 0) {
-            failureReason = "Insufficient funds2";
+            failureReason = "Insufficient funds";
             isFailedTransaction = true;
         }
 
