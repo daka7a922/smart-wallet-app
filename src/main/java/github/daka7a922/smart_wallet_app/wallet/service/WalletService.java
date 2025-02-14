@@ -97,7 +97,7 @@ public class WalletService {
                 TransactionStatus.SUCCEEDED,
                 transferDescription,
                 "null"
-                );
+        );
 
         return withdraw;
     }

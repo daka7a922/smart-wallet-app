@@ -57,7 +57,8 @@ public class User {
 
     @OrderBy("createdOn ASC")
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    private List<Wallet> wallets = new ArrayList<>();;
+    private List<Wallet> wallets = new ArrayList<>();
+    ;
 
 
 }

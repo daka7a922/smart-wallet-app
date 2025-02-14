@@ -26,7 +26,7 @@ public class SubscriptionService {
         this.subscriptionRepository = subscriptionRepository;
     }
 
-    public Subscription createDefaultSubscription(User user){
+    public Subscription createDefaultSubscription(User user) {
 
         Subscription subscription = subscriptionRepository.save(initializeDefaultSubscription(user));
         log.info("Successfully create new subscription with id [%s] and type [%s].".formatted(subscription.getId(), subscription.getType()));

@@ -44,11 +44,11 @@ public class UserService {
     }
 
     @Transactional
-    public User register(RegisterRequest registerRequest){
+    public User register(RegisterRequest registerRequest) {
 
         Optional<User> optionalUser = userRepository.findByUsername(registerRequest.getUsername());
 
-        if (optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             throw new DomainException("Username is already in use");
         }
 
@@ -66,7 +66,6 @@ public class UserService {
     }
 
 
-
     @Cacheable("users")
     public List<User> getAllUsers() {
 
@@ -82,20 +81,20 @@ public class UserService {
 
         Optional<User> optionalUser = userRepository.findByUsername(loginRequest.getUsername());
 
-        if (optionalUser.isEmpty()){
+        if (optionalUser.isEmpty()) {
             throw new DomainException("Username or password are incorrect");
         }
 
         User user = optionalUser.get();
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new DomainException("Username or password are incorrect");
         }
 
         return user;
     }
 
-    public void updateUserProfile(UUID id, UserEditRequest userEditRequest){
+    public void updateUserProfile(UUID id, UserEditRequest userEditRequest) {
 
         User user = getUserById(id);
 

@@ -45,6 +45,4 @@ public class SubscriptionController {
         return modelAndView;
 
     }
-
-
 }

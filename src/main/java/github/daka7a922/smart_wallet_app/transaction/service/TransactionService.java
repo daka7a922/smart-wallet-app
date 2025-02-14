@@ -26,19 +26,19 @@ public class TransactionService {
     }
 
 
-    public List<Transaction> getAllTransactionsByOwnerId(UUID ownerId){
+    public List<Transaction> getAllTransactionsByOwnerId(UUID ownerId) {
 
         return transactionRepository.findAllByOwnerIdOrderByCreatedOnDesc(ownerId);
     }
 
-    public Transaction getById(UUID id){
+    public Transaction getById(UUID id) {
 
-        return transactionRepository.findById(id).orElseThrow(()-> new DomainException("Transaction with id [%s] does not exist.".formatted(id)));
+        return transactionRepository.findById(id).orElseThrow(() -> new DomainException("Transaction with id [%s] does not exist.".formatted(id)));
     }
 
-    public Transaction createTransaction    (User owner, String sender, String receiver, BigDecimal amount, BigDecimal balanceLeft, Currency currency, TransactionType type, TransactionStatus status, String description, String failureReason){
+    public Transaction createTransaction(User owner, String sender, String receiver, BigDecimal amount, BigDecimal balanceLeft, Currency currency, TransactionType type, TransactionStatus status, String description, String failureReason) {
 
-       Transaction transaction = Transaction.builder()
+        Transaction transaction = Transaction.builder()
                 .owner(owner)
                 .sender(sender)
                 .receiver(receiver)

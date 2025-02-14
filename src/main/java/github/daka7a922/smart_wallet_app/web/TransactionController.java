@@ -27,7 +27,6 @@ public class TransactionController {
     @GetMapping
     public ModelAndView getTransactionsPage(HttpSession session) {
 
-
         UUID userId = (UUID) session.getAttribute("user_id");
         List<Transaction> transactions = transactionService.getAllTransactionsByOwnerId(userId);
 
