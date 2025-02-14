@@ -44,10 +44,10 @@ public class IndexController {
 
     }
 
-    @PostMapping ("/login")
-    public String login(@Valid LoginRequest loginRequest, BindingResult result, HttpSession session){
+    @PostMapping("/login")
+    public String login(@Valid LoginRequest loginRequest, BindingResult result, HttpSession session) {
 
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             return "login";
         }
 
@@ -68,9 +68,9 @@ public class IndexController {
     }
 
     @PostMapping("/register")
-    public ModelAndView registerNewUser(@Valid RegisterRequest registerRequest, BindingResult bindingResult){
+    public ModelAndView registerNewUser(@Valid RegisterRequest registerRequest, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return new ModelAndView("register");
         }
 
@@ -80,12 +80,10 @@ public class IndexController {
     }
 
     @GetMapping("/home")
-    public ModelAndView getHomePage(HttpSession session){
+    public ModelAndView getHomePage(HttpSession session) {
 
         UUID userId = (UUID) session.getAttribute("user_id");
-
         User user = userService.getUserById(userId);
-
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("home");
@@ -97,14 +95,11 @@ public class IndexController {
 
 
     @GetMapping("/logout")
-    public String getLogoutPage(HttpSession session){
+    public String getLogoutPage(HttpSession session) {
 
         session.invalidate();
-
-
         return "redirect:/";
     }
-
 
 
 }
