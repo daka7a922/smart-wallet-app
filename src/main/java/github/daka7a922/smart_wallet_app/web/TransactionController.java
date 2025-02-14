@@ -18,17 +18,19 @@ import java.util.UUID;
 public class TransactionController {
 
     private final TransactionService transactionService;
+
     @Autowired
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
     @GetMapping
-    public ModelAndView getTransactionsPage(HttpSession session){
+    public ModelAndView getTransactionsPage(HttpSession session) {
 
 
         UUID userId = (UUID) session.getAttribute("user_id");
         List<Transaction> transactions = transactionService.getAllTransactionsByOwnerId(userId);
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("transactions");
         modelAndView.addObject("transactions", transactions);
@@ -36,10 +38,8 @@ public class TransactionController {
         return modelAndView;
     }
 
-
-
     @GetMapping("/{id}")
-    public ModelAndView getTransactionById(@PathVariable UUID id){
+    public ModelAndView getTransactionById(@PathVariable UUID id) {
 
         Transaction transaction = transactionService.getById(id);
 

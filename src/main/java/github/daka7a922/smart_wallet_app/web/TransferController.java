@@ -5,6 +5,7 @@ import github.daka7a922.smart_wallet_app.user.model.User;
 import github.daka7a922.smart_wallet_app.user.service.UserService;
 import github.daka7a922.smart_wallet_app.wallet.service.WalletService;
 import github.daka7a922.smart_wallet_app.web.dto.TransferRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,9 +31,10 @@ public class TransferController {
     }
 
     @GetMapping
-    public ModelAndView getTransferPage(){
+    public ModelAndView getTransferPage(HttpSession session){
 
-        User user = userService.getUserById(UUID.fromString("4f35f873-f28c-466a-8cd4-5e52482b1b8f"));
+        UUID userId = (UUID) session.getAttribute("user_id");
+        User user = userService.getUserById(userId);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", user);
@@ -43,9 +45,10 @@ public class TransferController {
     }
 
     @PostMapping
-    public ModelAndView initiateTransfer(@Valid TransferRequest transferRequest, BindingResult bindingResult){
+    public ModelAndView initiateTransfer(@Valid TransferRequest transferRequest, BindingResult bindingResult, HttpSession session){
 
-        User user = userService.getUserById(UUID.fromString("4f35f873-f28c-466a-8cd4-5e52482b1b8f"));
+        UUID userId = (UUID) session.getAttribute("user_id");
+        User user = userService.getUserById(userId);
 
         if (bindingResult.hasErrors()){
             ModelAndView modelAndView = new ModelAndView();

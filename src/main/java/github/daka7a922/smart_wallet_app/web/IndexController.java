@@ -50,12 +50,10 @@ public class IndexController {
         if (result.hasErrors()){
             return "login";
         }
+
         User loggedInUser = userService.login(loginRequest);
-
         session.setAttribute("user_id", loggedInUser.getId());
 
-
-        session.setAttribute("user_id", loggedInUser.getId());
         return "redirect:home";
     }
 
@@ -78,7 +76,7 @@ public class IndexController {
 
         userService.register(registerRequest);
 
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/login");
     }
 
     @GetMapping("/home")
