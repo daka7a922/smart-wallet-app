@@ -1,5 +1,6 @@
 package github.daka7a922.smart_wallet_app.web;
 
+import github.daka7a922.smart_wallet_app.security.RequireAdminRole;
 import github.daka7a922.smart_wallet_app.user.model.User;
 import github.daka7a922.smart_wallet_app.user.service.UserService;
 import github.daka7a922.smart_wallet_app.web.dto.UserEditRequest;
@@ -60,7 +61,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ModelAndView getUsersPage(){
+    @RequireAdminRole
+    public ModelAndView getAllUsers(){
 
         List<User> users = userService.getAllUsers();
 
@@ -69,4 +71,21 @@ public class UserController {
         modelAndView.addObject("users", users);
         return modelAndView;
     }
+
+    @PutMapping("/{id}/status")
+    public String updateUserStatus(@PathVariable UUID id) {
+
+        userService.switchStatus(id);
+
+        return "redirect:/users";
+    }
+ @PutMapping("/{id}/role")
+    public String updateUserRole(@PathVariable UUID id) {
+
+        userService.switchRole(id);
+
+        return "redirect:/users";
+    }
+
+
 }

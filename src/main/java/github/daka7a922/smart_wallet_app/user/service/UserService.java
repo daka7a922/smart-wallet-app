@@ -105,7 +105,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        log.info("Successfully update user profile for user with id [%s]".formatted(user.getId()));
+        log.info("Successfully update user profile for user %s with id [%s]".formatted(user.getUsername(),user.getId()));
 
     }
 
@@ -123,4 +123,39 @@ public class UserService {
                 .updatedOn(now)
                 .build();
     }
+
+    public void switchStatus(UUID id) {
+
+        User user = userRepository.getById(id);
+
+//        if (user.isActive()){
+//            user.setActive(false);
+//        }else {
+//            user.setActive(true);
+//        }
+
+        user.setActive(!user.isActive());
+
+        userRepository.save(user);
+        log.info("Successfully changed status of user %s with id [%s]".formatted(user.getUsername(),user.getId()));
+
+
+    }
+    public void switchRole(UUID id) {
+
+        User user = userRepository.getById(id);
+
+        if (user.getUserRole() == UserRole.USER){
+            user.setUserRole(UserRole.ADMIN);
+        }else {
+            user.setUserRole(UserRole.USER);
+        }
+
+        userRepository.save(user);
+        log.info("Successfully changed role of user with id [%s]".formatted(user.getId()));
+
+
+    }
+
+
 }

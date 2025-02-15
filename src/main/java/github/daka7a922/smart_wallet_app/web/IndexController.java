@@ -87,17 +87,18 @@ public class IndexController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("home");
-        modelAndView.addObject("user");
         modelAndView.addObject("user", user);
 
         return modelAndView;
     }
 
+
     @GetMapping("/logout")
     public String getLogoutPage(HttpSession session) {
 
         session.invalidate();
-        return "redirect:/";
+
+        return "redirect:/home";
     }
 
 

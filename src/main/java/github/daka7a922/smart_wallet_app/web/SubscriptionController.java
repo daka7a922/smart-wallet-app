@@ -25,9 +25,12 @@ public class SubscriptionController {
 
 
     @GetMapping
-    public ModelAndView getSubscriptionsPage(){
+    public ModelAndView getSubscriptionsPage(HttpSession session){
 
+        UUID id = (UUID) session.getAttribute("user_id");
+        User user = userService.getUserById(id);
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("user", user);
         modelAndView.setViewName("upgrade");
 
         return modelAndView;
