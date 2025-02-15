@@ -56,21 +56,21 @@ public class SessionCheckInterceptor implements HandlerInterceptor {
         }
          // Way one:
 
-//        if (ADMIN_ENDPOINTS.contains(endpoint) && user.getUserRole() != UserRole.ADMIN){
-//
-//            response.setStatus(HttpStatus.FORBIDDEN.value());
-//            response.getWriter().write("You are not allowed to access this resource");
-//            return false;
-//        }
+        if (ADMIN_ENDPOINTS.contains(endpoint) && user.getUserRole() != UserRole.ADMIN){
 
-        // Way two:
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
-
-        if (handlerMethod.hasMethodAnnotation(RequireAdminRole.class) && user.getUserRole() != UserRole.ADMIN){
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.getWriter().write("You are not allowed to access this resource");
             return false;
         }
+
+        // Way two:
+//        HandlerMethod handlerMethod = (HandlerMethod) handler;
+//
+//        if (handlerMethod.hasMethodAnnotation(RequireAdminRole.class) && user.getUserRole() != UserRole.ADMIN){
+//            response.setStatus(HttpStatus.FORBIDDEN.value());
+//            response.getWriter().write("You are not allowed to access this resource");
+//            return false;
+//        }
 
 
         return true;
