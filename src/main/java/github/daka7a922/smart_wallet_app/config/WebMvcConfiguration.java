@@ -25,5 +25,27 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //    }
 
 
-  
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http
+                .authorizeHttpRequests(matchers -> matchers
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/", "/register").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+//                        .usernameParameter("username")
+//                        .passwordParameter("password")
+                        .defaultSuccessUrl("/home")
+                        .failureUrl("/login?error")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutSuccessUrl("/")
+                );
+
+        return http.build();
+    }
 }

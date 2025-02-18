@@ -170,4 +170,10 @@ public class UserService implements UserDetailsService {
 
         return new AuthenticationDetails(user.getId(), username, user.getPassword(), user.getUserRole(), user.isActive());
     }
+
+    public User getByUsername(String username) {
+
+        return userRepository.getUserByUsername(username);
+
+    }
 }

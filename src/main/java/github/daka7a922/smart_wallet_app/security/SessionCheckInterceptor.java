@@ -20,59 +20,59 @@ import java.util.UUID;
 @Slf4j
 public class SessionCheckInterceptor implements HandlerInterceptor {
 
-    private final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of("/","/login","/register");
-    private final Set<String> ADMIN_ENDPOINTS = Set.of("/users","/reports");
-
-    private final UserService userService;
-
-    @Autowired
-    public SessionCheckInterceptor(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        String endpoint = request.getServletPath();
-
-        if (UNAUTHENTICATED_ENDPOINTS.contains(endpoint)){
-            return true;
-        }
-
-        HttpSession session = request.getSession(false);
-        if (session == null){
-            response.sendRedirect("/login");
-            return false;
-        }
-
-        UUID userId = (UUID) session.getAttribute("user_id");
-        User user = userService.getUserById(userId);
-
-        if (!user.isActive()){
-            session.invalidate();
-            log.info("Inactive user %s tried logging in".formatted(user.getUsername()));
-            response.sendRedirect("/");
-            return false;
-        }
-         // Way one:
-
-        if (ADMIN_ENDPOINTS.contains(endpoint) && user.getUserRole() != UserRole.ADMIN){
-
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.getWriter().write("You are not allowed to access this resource");
-            return false;
-        }
-
-        // Way two:
-//        HandlerMethod handlerMethod = (HandlerMethod) handler;
+//    private final Set<String> UNAUTHENTICATED_ENDPOINTS = Set.of("/","/login","/register");
+//    private final Set<String> ADMIN_ENDPOINTS = Set.of("/users","/reports");
 //
-//        if (handlerMethod.hasMethodAnnotation(RequireAdminRole.class) && user.getUserRole() != UserRole.ADMIN){
+//    private final UserService userService;
+//
+//    @Autowired
+//    public SessionCheckInterceptor(UserService userService) {
+//        this.userService = userService;
+//    }
+//
+//    @Override
+//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//
+//        String endpoint = request.getServletPath();
+//
+//        if (UNAUTHENTICATED_ENDPOINTS.contains(endpoint)){
+//            return true;
+//        }
+//
+//        HttpSession session = request.getSession(false);
+//        if (session == null){
+//            response.sendRedirect("/login");
+//            return false;
+//        }
+//
+//        UUID userId = (UUID) session.getAttribute("user_id");
+//        User user = userService.getUserById(userId);
+//
+//        if (!user.isActive()){
+//            session.invalidate();
+//            log.info("Inactive user %s tried logging in".formatted(user.getUsername()));
+//            response.sendRedirect("/");
+//            return false;
+//        }
+//         // Way one:
+//
+//        if (ADMIN_ENDPOINTS.contains(endpoint) && user.getUserRole() != UserRole.ADMIN){
+//
 //            response.setStatus(HttpStatus.FORBIDDEN.value());
 //            response.getWriter().write("You are not allowed to access this resource");
 //            return false;
 //        }
-
-
-        return true;
-    }
+//
+//        // Way two:
+////        HandlerMethod handlerMethod = (HandlerMethod) handler;
+////
+////        if (handlerMethod.hasMethodAnnotation(RequireAdminRole.class) && user.getUserRole() != UserRole.ADMIN){
+////            response.setStatus(HttpStatus.FORBIDDEN.value());
+////            response.getWriter().write("You are not allowed to access this resource");
+////            return false;
+////        }
+//
+//
+//        return true;
+//    }
 }

@@ -7,6 +7,8 @@ import github.daka7a922.smart_wallet_app.web.dto.RegisterRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,14 +47,14 @@ public class IndexController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid LoginRequest loginRequest, BindingResult result, HttpSession session) {
+    public String login(@Valid LoginRequest loginRequest, BindingResult result, @AuthenticationPrincipal UserDetails userDetails) {
 
         if (result.hasErrors()) {
             return "login";
         }
 
-        User loggedInUser = userService.login(loginRequest);
-        session.setAttribute("user_id", loggedInUser.getId());
+        String username = userDetails.getUsername();
+        User loggedInUser = userService.getByUsername(username);
 
         return "redirect:home";
     }
@@ -80,10 +82,10 @@ public class IndexController {
     }
 
     @GetMapping("/home")
-    public ModelAndView getHomePage(HttpSession session) {
+    public ModelAndView getHomePage(@AuthenticationPrincipal UserDetails userDetails) {
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        User user = userService.getUserById(userId);
+        String username = userDetails.getUsername();
+        User user = userService.getByUsername(username);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("home");

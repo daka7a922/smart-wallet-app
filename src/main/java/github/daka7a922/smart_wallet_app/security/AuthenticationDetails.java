@@ -3,7 +3,7 @@ package github.daka7a922.smart_wallet_app.security;
 import github.daka7a922.smart_wallet_app.user.model.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Getter
 @AllArgsConstructor
 public class AuthenticationDetails implements UserDetails {
 

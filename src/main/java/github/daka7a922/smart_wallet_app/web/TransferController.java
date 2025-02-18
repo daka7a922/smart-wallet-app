@@ -8,6 +8,8 @@ import github.daka7a922.smart_wallet_app.web.dto.TransferRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +47,7 @@ public class TransferController {
     }
 
     @PostMapping
-    public ModelAndView initiateTransfer(@Valid TransferRequest transferRequest, BindingResult bindingResult, HttpSession session){
+    public ModelAndView initiateTransfer(@Valid TransferRequest transferRequest, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails){
 
         UUID userId = (UUID) session.getAttribute("user_id");
         User user = userService.getUserById(userId);
