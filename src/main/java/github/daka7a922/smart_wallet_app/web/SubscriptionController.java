@@ -9,6 +9,8 @@ import github.daka7a922.smart_wallet_app.user.service.UserService;
 import github.daka7a922.smart_wallet_app.web.dto.UpgradeRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -69,10 +71,10 @@ public class SubscriptionController {
 //    }
 
     @GetMapping("/history")
-    public ModelAndView subscriptionHistoryPage(HttpSession session){
+    public ModelAndView subscriptionHistoryPage(@AuthenticationPrincipal UserDetails userDetails) {
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        User user = userService.getUserById(userId);
+        String username = userDetails.getUsername();
+        User user = userService.getByUsername(username);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("subscription-history");

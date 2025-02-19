@@ -49,8 +49,8 @@ public class TransferController {
     @PostMapping
     public ModelAndView initiateTransfer(@Valid TransferRequest transferRequest, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails){
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        User user = userService.getUserById(userId);
+        String username = userDetails.getUsername();
+        User user = userService.getByUsername(username);
 
         if (bindingResult.hasErrors()){
             ModelAndView modelAndView = new ModelAndView();

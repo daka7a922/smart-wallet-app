@@ -6,6 +6,8 @@ import github.daka7a922.smart_wallet_app.user.model.User;
 import github.daka7a922.smart_wallet_app.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,10 +31,13 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ModelAndView getTransactionsPage(HttpSession session) {
+    public ModelAndView getTransactionsPage(@AuthenticationPrincipal UserDetails userDetails) {
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        User user = userService.getUserById(userId);
+
+        String username = userDetails.getUsername();
+        User user = userService.getByUsername(username);
+
+        UUID userId = user.getId();
         List<Transaction> transactions = transactionService.getAllTransactionsByOwnerId(userId);
 
         ModelAndView modelAndView = new ModelAndView();
