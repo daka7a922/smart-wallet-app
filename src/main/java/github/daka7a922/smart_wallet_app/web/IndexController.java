@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.UUID;
@@ -35,28 +36,18 @@ public class IndexController {
 
 
     @GetMapping("/login")
-    public ModelAndView getLoginPage() {
+    public ModelAndView getLoginPage(@RequestParam(value = "error", required = false) String errorParam) {
 
         ModelAndView modelAndView = new ModelAndView();
-
         modelAndView.setViewName("login");
         modelAndView.addObject("loginRequest", new LoginRequest());
 
-        return modelAndView;
-
-    }
-
-    @PostMapping("/login")
-    public String login(@Valid LoginRequest loginRequest, BindingResult result, @AuthenticationPrincipal UserDetails userDetails) {
-
-        if (result.hasErrors()) {
-            return "login";
+        if (errorParam != null) {
+            modelAndView.addObject("errorMessage", "Incorrect username or password!");
         }
 
-        String username = userDetails.getUsername();
-        User loggedInUser = userService.getByUsername(username);
+        return modelAndView;
 
-        return "redirect:home";
     }
 
     @GetMapping("/register")
@@ -84,8 +75,8 @@ public class IndexController {
     @GetMapping("/home")
     public ModelAndView getHomePage(@AuthenticationPrincipal UserDetails userDetails) {
 
-        String username = userDetails.getUsername();
-        User user = userService.getByUsername(username);
+
+        User user = userService.getByUsername(userDetails.getUsername());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("home");
