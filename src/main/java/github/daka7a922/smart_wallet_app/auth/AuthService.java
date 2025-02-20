@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    //Might implement this  TODO
+    //Might implement this feature TODO
 
     public String getCurrentUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

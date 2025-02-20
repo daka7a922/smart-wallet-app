@@ -13,14 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
-    
-//
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(sessionCheckInterceptor)
-//                .addPathPatterns("/**") //URLs to intercept
-//                .excludePathPatterns("/css/**", "/images/**");
-//    }
 
 
     @Bean
