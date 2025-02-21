@@ -33,10 +33,10 @@ public class TransferController {
     }
 
     @GetMapping
-    public ModelAndView getTransferPage(HttpSession session){
+    public ModelAndView getTransferPage(@AuthenticationPrincipal UserDetails userDetails) {
 
-        UUID userId = (UUID) session.getAttribute("user_id");
-        User user = userService.getUserById(userId);
+
+        User user = userService.getByUsername(userDetails.getUsername());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", user);

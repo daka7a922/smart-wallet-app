@@ -34,10 +34,10 @@ public class SubscriptionController {
 
 
     @GetMapping
-    public ModelAndView getSubscriptionsPage(HttpSession session){
+    public ModelAndView getSubscriptionsPage(@AuthenticationPrincipal UserDetails userDetails) {
 
-        UUID id = (UUID) session.getAttribute("user_id");
-        User user = userService.getUserById(id);
+
+        User user = userService.getByUsername(userDetails.getUsername());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("upgrade");
@@ -48,10 +48,9 @@ public class SubscriptionController {
     }
 
     @PostMapping
-    public String upgrade(@RequestParam("subscription-type") SubscriptionType subscriptionType, UpgradeRequest upgradeRequest, HttpSession session) {
+    public String upgrade(@RequestParam("subscription-type") SubscriptionType subscriptionType, UpgradeRequest upgradeRequest, @AuthenticationPrincipal UserDetails userDetails) {
 
-        UUID id = (UUID) session.getAttribute("user_id");
-        User user = userService.getUserById(id);
+        User user = userService.getByUsername(userDetails.getUsername());
 
         Transaction upgradeResult = subscriptionService.upgrade(user, subscriptionType, upgradeRequest);
 
