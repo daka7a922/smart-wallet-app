@@ -1,5 +1,6 @@
 package github.daka7a922.smart_wallet_app.web;
 
+import github.daka7a922.smart_wallet_app.security.AuthenticationDetails;
 import github.daka7a922.smart_wallet_app.transaction.model.Transaction;
 import github.daka7a922.smart_wallet_app.transaction.service.TransactionService;
 import github.daka7a922.smart_wallet_app.user.model.User;
@@ -31,7 +32,7 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ModelAndView getTransactionsPage(@AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView getTransactionsPage(@AuthenticationPrincipal AuthenticationDetails userDetails) {
 
 
         String username = userDetails.getUsername();

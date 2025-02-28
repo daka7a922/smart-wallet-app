@@ -1,5 +1,6 @@
 package github.daka7a922.smart_wallet_app.web;
 
+import github.daka7a922.smart_wallet_app.security.AuthenticationDetails;
 import github.daka7a922.smart_wallet_app.subscription.model.SubscriptionType;
 import github.daka7a922.smart_wallet_app.subscription.service.SubscriptionService;
 import github.daka7a922.smart_wallet_app.transaction.model.Transaction;
@@ -34,7 +35,7 @@ public class SubscriptionController {
 
 
     @GetMapping
-    public ModelAndView getSubscriptionsPage(@AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView getSubscriptionsPage(@AuthenticationPrincipal AuthenticationDetails userDetails) {
 
 
         User user = userService.getByUsername(userDetails.getUsername());
@@ -48,7 +49,7 @@ public class SubscriptionController {
     }
 
     @PostMapping
-    public String upgrade(@RequestParam("subscription-type") SubscriptionType subscriptionType, UpgradeRequest upgradeRequest, @AuthenticationPrincipal UserDetails userDetails) {
+    public String upgrade(@RequestParam("subscription-type") SubscriptionType subscriptionType, UpgradeRequest upgradeRequest, @AuthenticationPrincipal AuthenticationDetails userDetails) {
 
         User user = userService.getByUsername(userDetails.getUsername());
 
@@ -70,7 +71,7 @@ public class SubscriptionController {
 //    }
 
     @GetMapping("/history")
-    public ModelAndView subscriptionHistoryPage(@AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView subscriptionHistoryPage(@AuthenticationPrincipal AuthenticationDetails userDetails) {
 
         String username = userDetails.getUsername();
         User user = userService.getByUsername(username);

@@ -1,5 +1,6 @@
 package github.daka7a922.smart_wallet_app.web;
 
+import github.daka7a922.smart_wallet_app.security.AuthenticationDetails;
 import github.daka7a922.smart_wallet_app.transaction.model.Transaction;
 import github.daka7a922.smart_wallet_app.user.model.User;
 import github.daka7a922.smart_wallet_app.user.service.UserService;
@@ -33,7 +34,7 @@ public class TransferController {
     }
 
     @GetMapping
-    public ModelAndView getTransferPage(@AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView getTransferPage(@AuthenticationPrincipal AuthenticationDetails userDetails) {
 
 
         User user = userService.getByUsername(userDetails.getUsername());
@@ -47,7 +48,7 @@ public class TransferController {
     }
 
     @PostMapping
-    public ModelAndView initiateTransfer(@Valid TransferRequest transferRequest, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails){
+    public ModelAndView initiateTransfer(@Valid TransferRequest transferRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationDetails userDetails){
 
         String username = userDetails.getUsername();
         User user = userService.getByUsername(username);

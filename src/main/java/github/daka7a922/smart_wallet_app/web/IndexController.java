@@ -1,5 +1,6 @@
 package github.daka7a922.smart_wallet_app.web;
 
+import github.daka7a922.smart_wallet_app.security.AuthenticationDetails;
 import github.daka7a922.smart_wallet_app.user.model.User;
 import github.daka7a922.smart_wallet_app.user.service.UserService;
 import github.daka7a922.smart_wallet_app.web.dto.LoginRequest;
@@ -73,7 +74,7 @@ public class IndexController {
     }
 
     @GetMapping("/home")
-    public ModelAndView getHomePage(@AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView getHomePage(@AuthenticationPrincipal AuthenticationDetails userDetails) {
 
 
         User user = userService.getByUsername(userDetails.getUsername());

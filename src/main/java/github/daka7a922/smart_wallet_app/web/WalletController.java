@@ -1,5 +1,6 @@
 package github.daka7a922.smart_wallet_app.web;
 
+import github.daka7a922.smart_wallet_app.security.AuthenticationDetails;
 import github.daka7a922.smart_wallet_app.user.model.User;
 import github.daka7a922.smart_wallet_app.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -25,7 +26,7 @@ public class WalletController {
 
 
     @GetMapping()
-    public ModelAndView getWalletsPage(@AuthenticationPrincipal UserDetails userDetails) {
+    public ModelAndView getWalletsPage(@AuthenticationPrincipal AuthenticationDetails userDetails) {
 
         String username = userDetails.getUsername();
         User user = userService.getByUsername(username);
