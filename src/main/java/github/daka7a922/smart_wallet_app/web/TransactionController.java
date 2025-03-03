@@ -35,8 +35,7 @@ public class TransactionController {
     public ModelAndView getTransactionsPage(@AuthenticationPrincipal AuthenticationDetails userDetails) {
 
 
-        String username = userDetails.getUsername();
-        User user = userService.getByUsername(username);
+        User user = userService.getByUsername(userDetails.getUsername());
 
         UUID userId = user.getId();
         List<Transaction> transactions = transactionService.getAllTransactionsByOwnerId(userId);
@@ -50,13 +49,15 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView getTransactionById(@PathVariable UUID id) {
+    public ModelAndView getTransactionById(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationDetails userDetails) {
 
         Transaction transaction = transactionService.getById(id);
+        User user = userService.getUserById(userDetails.getUserId());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("transaction-result");
         modelAndView.addObject("transaction", transaction);
+        modelAndView.addObject("user", user);
 
         return modelAndView;
     }

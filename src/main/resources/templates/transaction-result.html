@@ -54,7 +54,7 @@
               <path fill-rule="evenodd" d="M12.293 3.293a1 1 0 0 1 1.414 0L16.414 6h-2.828l-1.293-1.293a1 1 0 0 1 0-1.414ZM12.414 6 9.707 3.293a1 1 0 0 0-1.414 0L5.586 6h6.828ZM4.586 7l-.056.055A2 2 0 0 0 3 9v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2h-4a5 5 0 0 1 0-10h4a2 2 0 0 0-1.53-1.945L17.414 7H4.586Z" clip-rule="evenodd"></path>
             </svg>
           </a>
-          <a href="/transactions">
+          <a href="/transactions" >
             <p>Transactions</p>
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 20V7m0 13-4-4m4 4 4-4m4-12v13m0-13 4 4m-4-4-4 4"></path>
@@ -70,7 +70,7 @@
             </svg>
           </a>
         </div>
-        <div class="func-block admin-func-block">
+        <div class="func-block admin-func-block" th:if="${user.userRole == 'ADMIN'}">
           <span>Admin</span>
           <a href="/users">
             <p>Users</p>

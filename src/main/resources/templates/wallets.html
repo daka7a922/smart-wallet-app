@@ -102,7 +102,8 @@
     <div class="wallet-block" th:each = "wallet : ${user.wallets}">
       <div class="default-label-box">
         <p>Standard Wallet</p>
-        <p th:text="${wallet.status}" th:classappend ="${user.wallets[0].status.name() == 'ACTIVE' ? 'active-wallet-status' : 'inactive-wallet-status' }">ACTIVE</p>
+        <p th:if="${wallet.status.name() == 'ACTIVE'}"  class="active-wallet-status">ACTIVE</p>
+        <p th:if="${wallet.status.name() == 'INACTIVE'}"  class="inactive-wallet-status">INACTIVE</p>
       </div>
 
       <div class="wallet-balance">
@@ -169,7 +170,7 @@
       </div>
     </div>
 
-    <form class="wallet-block new-wallet" th:action="@{/wallets}" th:method="POST">
+    <form class="wallet-block new-wallet" th:action="@{/wallets}" th:method="POST" th:if="${(user.subscriptions.get(0).type.name() =='PREMIUM' && user.wallets.size() < 2) || (user.subscriptions.get(0).type.name() =='ULTIMATE' && user.wallets.size() < 3) }">
       <button type="submit"></button>
     </form>
 
