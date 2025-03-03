@@ -61,7 +61,7 @@ public class UserService implements UserDetailsService {
         Subscription defaultSubscription = subscriptionService.createDefaultSubscription(user);
         user.setSubscriptions(List.of(defaultSubscription));
 
-        Wallet standardWallet = walletService.createNewWallet(user);
+        Wallet standardWallet = walletService.initializeFirstWallet(user);
         user.setWallets(List.of(standardWallet));
 
         log.info("Successfully create new user account for username [%s] and id [%s]".formatted(user.getUsername(), user.getId()));

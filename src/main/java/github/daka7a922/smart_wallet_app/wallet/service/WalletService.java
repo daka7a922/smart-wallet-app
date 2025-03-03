@@ -1,6 +1,8 @@
 package github.daka7a922.smart_wallet_app.wallet.service;
 
 import github.daka7a922.smart_wallet_app.exception.DomainException;
+import github.daka7a922.smart_wallet_app.subscription.model.Subscription;
+import github.daka7a922.smart_wallet_app.subscription.model.SubscriptionType;
 import github.daka7a922.smart_wallet_app.transaction.model.Transaction;
 import github.daka7a922.smart_wallet_app.transaction.model.TransactionStatus;
 import github.daka7a922.smart_wallet_app.transaction.model.TransactionType;
@@ -10,7 +12,6 @@ import github.daka7a922.smart_wallet_app.wallet.model.Wallet;
 import github.daka7a922.smart_wallet_app.wallet.model.WalletStatus;
 import github.daka7a922.smart_wallet_app.wallet.repository.WalletRepository;
 import github.daka7a922.smart_wallet_app.web.dto.TransferRequest;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Currency;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,7 +39,13 @@ public class WalletService {
         this.transactionService = transactionService;
     }
 
-    public Wallet createNewWallet(User user) {
+    public Wallet initializeFirstWallet(User user) {
+
+        List<Wallet> allByOwnerUsername = walletRepository.findAllByOwnerUsername(user.getUsername());
+
+        if (!allByOwnerUsername.isEmpty()) {
+            throw new DomainException("User with id [%s] already has wallets".formatted(user.getUsername()));
+        }
 
         Wallet wallet = walletRepository.save(initializeWallet(user));
         log.info("Successfully create new wallet with id [%s] and balance [%.2f].".formatted(wallet.getId(), wallet.getBalance()));
@@ -173,5 +181,32 @@ public class WalletService {
                 .createdOn(now)
                 .updatedOn(now)
                 .build();
+    }
+
+    public void unlockNewWallet(User user) {
+
+        List<Wallet> allUserWallets = walletRepository.findAllByOwnerUsername(user.getUsername());
+        Subscription activeSubscription = user.getSubscriptions().get(0);
+
+        boolean isDefaultSubscriptionAndMaxWalletsUnlocked = activeSubscription.getType() == SubscriptionType.DEFAULT && allUserWallets.size() == 1;
+        boolean isPremiumSubscriptionAndMaxWalletsUnlocked = activeSubscription.getType() == SubscriptionType.PREMIUM && allUserWallets.size() == 2;
+        boolean isUltimateSubscriptionAndMaxWalletsUnlocked = activeSubscription.getType() == SubscriptionType.ULTIMATE && allUserWallets.size() == 3;
+
+        if (isDefaultSubscriptionAndMaxWalletsUnlocked || isPremiumSubscriptionAndMaxWalletsUnlocked || isUltimateSubscriptionAndMaxWalletsUnlocked) {
+            throw new DomainException("Cannot unlock new wallet. Max wallets unlocked for current subscription");
+        }
+
+        Wallet wallet = Wallet.builder()
+                .owner(user)
+                .status(WalletStatus.ACTIVE)
+                .balance(BigDecimal.valueOf(0))
+                .currency(Currency.getInstance("EUR"))
+                .createdOn(LocalDateTime.now())
+                .updatedOn(LocalDateTime.now())
+                .build();
+
+        walletRepository.save(wallet);
+
+
     }
 }
