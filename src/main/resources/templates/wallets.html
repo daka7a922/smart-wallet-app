@@ -99,14 +99,14 @@
   </div></div>
   <div class="home-section">
 
-    <div class="wallet-block">
+    <div class="wallet-block" th:each = "wallet : ${user.wallets}">
       <div class="default-label-box">
         <p>Standard Wallet</p>
-        <p class="active-wallet-status">ACTIVE</p>
+        <p th:text="${wallet.status}" th:classappend ="${user.wallets[0].status.name() == 'ACTIVE' ? 'active-wallet-status' : 'inactive-wallet-status' }">ACTIVE</p>
       </div>
 
       <div class="wallet-balance">
-        <p class="balance">36.03 EUR</p>
+        <p class="balance" th:text="${wallet.balance + ' EUR'}">36.03 EUR</p>
         <p class="available-balance-text">Available Balance</p>
       </div>
 
@@ -132,11 +132,11 @@
       <div class="details-section">
         <div class="details-section-container">
           <strong>Id: </strong>
-          <p>dccacda6-12d3-422c-8ad0-23992ef55a1b</p>
+          <p th:text="${wallet.id}">dccacda6-12d3-422c-8ad0-23992ef55a1b</p>
         </div>
         <div class="details-section-container">
           <strong>Created on: </strong>
-          <p>09 Dec 2024 21:39</p>
+          <p th:text="${#temporals.format(wallet.createdOn, 'dd MMM YY HH:mm')}">09 Dec 2024 21:39</p>
         </div>
       </div>
 
