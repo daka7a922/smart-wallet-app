@@ -6,6 +6,7 @@ import github.daka7a922.smart_wallet_app.transaction.model.TransactionStatus;
 import github.daka7a922.smart_wallet_app.transaction.model.TransactionType;
 import github.daka7a922.smart_wallet_app.transaction.repository.TransactionRepository;
 import github.daka7a922.smart_wallet_app.user.model.User;
+import github.daka7a922.smart_wallet_app.wallet.model.Wallet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Currency;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -52,5 +54,19 @@ public class TransactionService {
                 .createdOn(LocalDateTime.now())
                 .build();
         return transactionRepository.save(transaction);
+    }
+
+    public List<Transaction> getLastForTransactionsByWalletId(Wallet wallet) {
+
+        List<Transaction> lastFourTransactions = transactionRepository.findAllBySenderOrReceiverOrderByCreatedOnDesc(wallet.getId().toString(), wallet.getId().toString())
+                .stream()
+                .filter(transaction -> transaction.getOwner().getId() == wallet.getOwner().getId())
+                .filter(t -> t.getStatus() == TransactionStatus.SUCCEEDED)
+                .limit(4)
+                .collect(Collectors.toList());
+
+        return lastFourTransactions;
+
+
     }
 }

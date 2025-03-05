@@ -19,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Currency;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -208,5 +205,19 @@ public class WalletService {
         walletRepository.save(wallet);
 
 
+    }
+
+    public Map<UUID, List<Transaction>> getLastFourTransactions(List<Wallet> wallets) {
+
+        Map<UUID, List<Transaction>> transactionsByWalletId = new LinkedHashMap<>();
+
+        for (Wallet wallet : wallets) {
+
+            List<Transaction> lastFourTransactions = transactionService.getLastForTransactionsByWalletId(wallet);
+            transactionsByWalletId.put(wallet.getId(), lastFourTransactions);
+
+        }
+
+        return  transactionsByWalletId;
     }
 }
