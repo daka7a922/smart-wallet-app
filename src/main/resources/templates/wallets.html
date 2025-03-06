@@ -120,7 +120,7 @@
             </svg>
           </button>
         </form>
-        <form action="/wallets/dccacda6-12d3-422c-8ad0-23992ef55a1b" method="post"><input type="hidden" name="_method" value="PUT">
+        <form th:action="@{'/wallets/' + ${wallet.id} + '/status'}" th:method="PUT">
           <button type="submit" class="profile-actions-button">
             <p>Switch</p>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16">

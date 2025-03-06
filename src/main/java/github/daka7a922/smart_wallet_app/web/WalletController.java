@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -57,6 +55,14 @@ public class WalletController {
 
     User user = userService.getByUsername(userDetails.getUsername());
     walletService.unlockNewWallet(user);
+
+        return "redirect:/wallets";
+    }
+
+    @PutMapping("/{id}/status")
+    public String updateWalletStatus(@AuthenticationPrincipal AuthenticationDetails userDetails, @PathVariable UUID id){
+
+        walletService.changeWalletStatus(id);
 
         return "redirect:/wallets";
     }

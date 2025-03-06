@@ -220,4 +220,16 @@ public class WalletService {
 
         return  transactionsByWalletId;
     }
+
+    public void changeWalletStatus(UUID id) {
+
+        Wallet wallet = walletRepository.findById(id).get();
+
+        if (wallet.getStatus() == WalletStatus.ACTIVE) {
+            wallet.setStatus(WalletStatus.INACTIVE);
+        }else {
+            wallet.setStatus(WalletStatus.ACTIVE);
+        }
+        walletRepository.save(wallet);
+    }
 }
