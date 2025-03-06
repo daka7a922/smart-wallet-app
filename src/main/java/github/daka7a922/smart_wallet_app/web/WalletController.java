@@ -71,8 +71,8 @@ public class WalletController {
     @PutMapping("/{id}/balance/top-up")
     public String topUpBalance(@PathVariable UUID id){
 
-        walletService.topUp(id, BigDecimal.valueOf(20));
+        Transaction transaction = walletService.topUp(id, BigDecimal.valueOf(20));
 
-        return  "redirect:/wallets";
+        return  "redirect:/transactions/" + transaction.getId();
     }
 }
