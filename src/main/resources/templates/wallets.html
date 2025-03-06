@@ -112,7 +112,7 @@
       </div>
 
       <div class="wallet-actions">
-        <form action="/wallets/dccacda6-12d3-422c-8ad0-23992ef55a1b/balance?top-up-amount=20.00" method="post"><input type="hidden" name="_method" value="PUT">
+        <form th:action="@{'/wallets/' + ${wallet.id} + '/balance/top-up'}"th:method="PUT">
           <button type="submit" class="profile-actions-button">
             <p>20.00</p>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">

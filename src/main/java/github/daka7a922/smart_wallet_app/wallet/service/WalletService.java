@@ -159,6 +159,44 @@ public class WalletService {
                 null
         );
     }
+    @Transactional
+    public Transaction topUp(UUID walletId, BigDecimal amount){
+
+
+        Wallet wallet = getWalletById(walletId);
+        String transactionDescription = "Top up %.2f".formatted(amount.doubleValue());
+
+        if (wallet.getStatus() == WalletStatus.INACTIVE) {
+
+            return transactionService.createTransaction(wallet.getOwner(),
+                    SMART_WALLET_LTD,
+                    walletId.toString(),
+                    amount,
+                    wallet.getBalance(),
+                    wallet.getCurrency(),
+                    TransactionType.DEPOSIT,
+                    TransactionStatus.FAILED,
+                    transactionDescription,
+                    "Inactive wallet");
+        }
+
+        wallet.setBalance(wallet.getBalance().add(amount));
+        wallet.setUpdatedOn(LocalDateTime.now());
+
+        walletRepository.save(wallet);
+
+        return transactionService.createTransaction(wallet.getOwner(),
+                SMART_WALLET_LTD,
+                walletId.toString(),
+                amount,
+                wallet.getBalance(),
+                wallet.getCurrency(),
+                TransactionType.DEPOSIT,
+                TransactionStatus.SUCCEEDED,
+                transactionDescription,
+                null);
+
+    }
 
     public Wallet getWalletById(UUID walletId) {
 
@@ -221,9 +259,14 @@ public class WalletService {
         return  transactionsByWalletId;
     }
 
-    public void changeWalletStatus(UUID id) {
+    public void changeWalletStatus(UUID id, UUID userId) {
 
-        Wallet wallet = walletRepository.findById(id).get();
+        Optional<Wallet> optionalWallet = walletRepository.findByIdAndOwnerId(id, userId);
+
+        if (optionalWallet.isEmpty()) {
+            throw new DomainException("Wallet with id [%s] does not exist".formatted(id));
+        }
+        Wallet wallet = optionalWallet.get();
 
         if (wallet.getStatus() == WalletStatus.ACTIVE) {
             wallet.setStatus(WalletStatus.INACTIVE);
@@ -232,4 +275,5 @@ public class WalletService {
         }
         walletRepository.save(wallet);
     }
+
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -62,8 +63,16 @@ public class WalletController {
     @PutMapping("/{id}/status")
     public String updateWalletStatus(@AuthenticationPrincipal AuthenticationDetails userDetails, @PathVariable UUID id){
 
-        walletService.changeWalletStatus(id);
+        walletService.changeWalletStatus(id, userDetails.getUserId());
 
         return "redirect:/wallets";
+    }
+
+    @PutMapping("/{id}/balance/top-up")
+    public String topUpBalance(@PathVariable UUID id){
+
+        walletService.topUp(id, BigDecimal.valueOf(20));
+
+        return  "redirect:/wallets";
     }
 }
